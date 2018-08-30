@@ -68,24 +68,6 @@ ou <- "Malawi"
       select(operatingunit, psnu,sitename, orgunituid, pds) 
     
     ci_hts_pos_yoy <- ci_hts_pos_yoy %>% 
-      gather(pd, val, starts_with("fy"), na.rm = TRUE) %>% 
-      mutate(pd = str_remove_all(pd, "q[:digit:]")) %>% 
-      group_by_if(is.character) %>% 
-      summarise_if(is.numeric, ~ sum(., na.rm = TRUE)) %>% 
-      ungroup() %>% 
-      spread(pd, val, fill = 0)
-          
-    ci_hts_pos_yoy <- ci_hts_pos_yoy %>% 
-      mutate(ci_hts_pos_yoy = (!!curr_yr - !!prior_yr) / !!prior_yr)
-      
-      
-    
-    ci_hts_pos_yoy <- df_site %>% 
-      filter(indicator == "HTS_TST_POS", standardizeddisaggregate == "Total Numerator",
-             is.na(typemilitary)) %>% 
-      select(operatingunit, psnu,sitename, orgunituid, pds) 
-    
-    ci_hts_pos_yoy <- ci_hts_pos_yoy %>% 
       gather(pd, val, starts_with("fy")) %>% 
       mutate(pd = str_remove_all(pd, "q[:digit:]")) %>% 
       group_by_if(is.character) %>% 
