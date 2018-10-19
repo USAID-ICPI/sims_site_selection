@@ -48,11 +48,12 @@ ou <- "Kenya"
   #Calculate percentile grouping
     lnk_val <- lnk_val %>%
       group_by(operatingunit) %>% 
-      mutate(lnk.proxylinkage_score = case_when(linkage > quantile(linkage, .75) ~ 2,
+      mutate(lnk.proxylinkage.score = case_when(linkage > quantile(linkage, .75) ~ 2,
                                                 linkage > quantile(linkage, .50) ~ 1,
                                                 TRUE                             ~ 0)) %>% 
       ungroup() %>%
-      rename(lnk.proxylinkage = linkage)
+      rename(lnk.proxylinkage.value = linkage) %>% 
+      select(-HTS_TST_POS, -TX_NEW)
     
       
 #4. & 5. Number of quarters without decrease/increase
@@ -88,12 +89,13 @@ ou <- "Kenya"
     
     lnk_chng <- lnk_chng %>%
       group_by(operatingunit) %>% 
-      mutate(lnk.lnk_pos_chng_score = case_when(link_qtrdiff_pos > quantile(link_qtrdiff_pos, .75) ~ 2,
+      mutate(lnk.lnk_pos_chng.score = case_when(link_qtrdiff_pos > quantile(link_qtrdiff_pos, .75) ~ 2,
                                                 link_qtrdiff_pos > quantile(link_qtrdiff_pos, .50) ~ 1,
                                                 TRUE                                               ~ 0),
-             lnk.lnk_neg_chng_score = case_when(link_qtrdiff_neg > quantile(link_qtrdiff_neg, .75) ~ 2,
+             lnk.lnk_neg_chng.score = case_when(link_qtrdiff_neg > quantile(link_qtrdiff_neg, .75) ~ 2,
                                                 link_qtrdiff_neg > quantile(link_qtrdiff_neg, .50) ~ 1,
                                                 TRUE                                               ~ 0)) %>% 
       ungroup() %>%
-      rename(lnk.lnk_pos_chng_val = link_qtrdiff_pos,
-             lnk.lnk_neg_chng_val = link_qtrdiff_neg)
+      rename(lnk.lnk_pos_chng.value = link_qtrdiff_pos,
+             lnk.lnk_neg_chng.value = link_qtrdiff_neg) %>% 
+      select(-linkage)

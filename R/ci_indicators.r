@@ -41,16 +41,17 @@ ou <- "Kenya"
   #Calculate percentile grouping
     ci_hts_pos <- ci_hts_pos %>%
       group_by(operatingunit) %>% 
-      mutate(ci.hts_pos_ou_score = case_when(val > quantile(val, .75) ~ 2,
+      mutate(ci.hts_pos_ou.score = case_when(val > quantile(val, .75) ~ 2,
                                              val > quantile(val, .50) ~ 1,
                                              TRUE                     ~ 0)) %>% 
       ungroup() %>%
       group_by(operatingunit, psnu) %>% 
-      mutate(ci.hts_pos_psnu_score = case_when(val > quantile(val, .75) ~ 2,
+      mutate(ci.hts_pos_psnu.score = case_when(val > quantile(val, .75) ~ 2,
                                                val > quantile(val, .50) ~ 1,
                                                TRUE                     ~ 0)) %>% 
       ungroup() %>% 
-      rename(ci.hts_pos_vol = val)
+      mutate(ci.hts_pos_ou.value = val) %>% 
+      rename(ci.hts_pos_psnu.value = val)
     
 #3. Year on Year change in volume
     
@@ -76,21 +77,23 @@ ou <- "Kenya"
       summarise_if(is.numeric, ~ sum(., na.rm = TRUE)) %>% 
       #ungroup() %>% 
       #group_by_if(is.character) %>% 
-      mutate(ci_hts_pos_yoyd =val - dplyr::lag(val),
-             ci_hts_pos_yoyc = (val - dplyr::lag(val))/dplyr::lag(val)) %>% 
+      mutate(ci.hts_pos_yoyd =val - dplyr::lag(val),
+             ci.hts_pos_yoyc = (val - dplyr::lag(val))/dplyr::lag(val)) %>% 
       ungroup() %>% 
-      filter(pd == "fy2018", is.finite(ci_hts_pos_yoyc))
+      filter(pd == "fy2018", is.finite(ci.hts_pos_yoyc))
 
   #Calculate percentile grouping
     ci_hts_pos_yoy <- ci_hts_pos_yoy %>%
       group_by(operatingunit) %>% 
-      mutate(ci.hts_pos_yoyd_score = case_when(ci_hts_pos_yoyd > quantile(ci_hts_pos_yoyd, .75) ~ 2,
-                                               ci_hts_pos_yoyd > quantile(ci_hts_pos_yoyd, .50) ~ 1,
+      mutate(ci.hts_pos_yoyd.score = case_when(ci.hts_pos_yoyd > quantile(ci.hts_pos_yoyd, .75) ~ 2,
+                                               ci.hts_pos_yoyd > quantile(ci.hts_pos_yoyd, .50) ~ 1,
                                                TRUE                                ~ 0),
-             ci.hts_pos_yoyc_score = case_when(ci_hts_pos_yoyc > quantile(ci_hts_pos_yoyc, .75) ~ 2,
-                                               ci_hts_pos_yoyc > quantile(ci_hts_pos_yoyc, .50) ~ 1,
+             ci.hts_pos_yoyc.score = case_when(ci.hts_pos_yoyc > quantile(ci.hts_pos_yoyc, .75) ~ 2,
+                                               ci.hts_pos_yoyc > quantile(ci.hts_pos_yoyc, .50) ~ 1,
                                                TRUE                                ~ 0)) %>% 
       ungroup() %>% 
-      rename(ci.hts_pos_fy18 = val) %>% 
-      select(-pd)
+      rename(ci.hts_pos_yoyd.value = ci.hts_pos_yoyd,
+             ci.hts_pos_yoyc.value = ci.hts_pos_yoyc,
+             ci.hts_pos_yoy.value = val) %>% 
+      select(-pd, -ci.hts_pos_yoy.value)
      
