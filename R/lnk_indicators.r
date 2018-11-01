@@ -30,8 +30,8 @@
   #Calculate percentile grouping
     lnk_val <- lnk_val %>%
       group_by(operatingunit) %>% 
-      mutate(lnk.proxylinkage.score = case_when(linkage > quantile(linkage, .75) ~ 2,
-                                                linkage > quantile(linkage, .50) ~ 1,
+      mutate(lnk.proxylinkage.score = case_when(linkage < quantile(linkage, .25) ~ 2,
+                                                linkage < quantile(linkage, .50) ~ 1,
                                                 TRUE                             ~ 0)) %>% 
       ungroup() %>%
       rename(lnk.proxylinkage.value = linkage) %>% 
