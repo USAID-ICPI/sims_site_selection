@@ -1,21 +1,5 @@
 
 
-# SETUP -------------------------------------------------------------------
-
-library(tidyverse)
-library(ICPIutilities)
-
-path <- "~/ICPI/Data"
-ou <- "Kenya"
-
-# IMPORT DATASET ----------------------------------------------------------
-  
-  #strucutre filepath from inputs
-    filepath <- file.path(path, paste0("MER_Structured_Dataset_SITE_IM_FY17-18_20180921_v2_2_", ou, ".rds"))
-  #open file
-    df_site <- read_rds(filepath)
-      rm(filepath)
-
 # CASE IDENTIFICATION -----------------------------------------------------
 
 #1.&2. HTS_TST_POS Position relative to OU-/PSNU-level median (median last three quarters)
