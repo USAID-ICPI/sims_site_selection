@@ -2,7 +2,7 @@
 # PERFORMANCE -------------------------------------------------------------
 
 prfm_ind <- df_site %>% 
-  filter(indicator %in% c("HTS_TST_POS", "TX_NEW", "PMTCT_STAT", "OVC_SERV", "KP_PREV"),
+  filter(indicator %in% c("HTS_TST_POS", "TX_NEW", "PMTCT_STAT", "OVC_SERV", "KP_PREV", "VMMC_CIRC"),
          standardizeddisaggregate == "Total Numerator",
          typemilitary == "N") %>% 
   add_cumulative() %>% 
