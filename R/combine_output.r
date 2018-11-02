@@ -59,9 +59,9 @@ ou <- "Kenya"
     unite(metric, grp, metric, sep = ".") %>% 
     spread(metric, val)
 
-#export wide
+#export wide, score only
   combo_w %>% 
-    filter(type == "value") %>% 
+    filter(type == "score") %>% 
     write_csv("Output/sims_selection_KEN_DEMO_wide.csv", na = "")
 
 # combo_l <- combo %>% 
