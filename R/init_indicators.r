@@ -49,7 +49,7 @@
     pds <- headers[stringr::str_detect(headers, paste0("q", qtr_fltr))]
     
     init_tx_new_yoy <- df_site %>% 
-      filter(indicator == "HTS_TST_POS", 
+      filter(indicator == "TX_NEW", 
              standardizeddisaggregate == "Total Numerator",
              typemilitary == "N") %>% 
       select(operatingunit, psnu,sitename, orgunituid, pds) 
