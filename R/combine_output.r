@@ -49,7 +49,7 @@ ou <- "Kenya"
 
 #remove blank rows & arrange by TX_NEW volumne
   combo <- combo %>% 
-    filter_at(vars(matches("(ci|init|lnk|stat|prfm)")), any_vars(!is.na(.) & .!=0))
+    filter_at(vars(matches("(ci|init|lnk|stat|prfm)")), any_vars(!is.na(.) & .!=0)) %>% 
     arrange(desc(init.tx_new_ou.value))
 
 #covert to wide
@@ -60,9 +60,9 @@ ou <- "Kenya"
     spread(metric, val)
 
 #export wide
-combo_w %>% 
-  filter(type == "value") %>% 
-  write_csv("Output/sims_selection_KEN_DEMO_wide.csv", na = "")
+  combo_w %>% 
+    filter(type == "value") %>% 
+    write_csv("Output/sims_selection_KEN_DEMO_wide.csv", na = "")
 
 # combo_l <- combo %>% 
 #   gather(metric, val, -c(sitename, operatingunit, psnu, snuprioritization, sitetype, orgunituid), na.rm = TRUE) %>% 
