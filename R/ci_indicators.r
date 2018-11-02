@@ -80,4 +80,40 @@
              ci.hts_pos_yoyc.value = ci.hts_pos_yoyc,
              ci.hts_pos_yoy.value = val) %>% 
       select(-pd, -ci.hts_pos_yoy.value)
-     
+   
+#4. Share Index testing
+  
+  #narrow down to data needed for indicator creation
+    ci_index <- df_site %>% 
+      filter(indicator == "HTS_TST", 
+             standardizeddisaggregate %in% c("Modality/Age Aggregated/Sex/Result",
+                                             "Modality/Age/Sex/Result"),
+             typemilitary == "N") %>% 
+      select(operatingunit, psnu,sitename, orgunituid, pds, modality) %>% 
+      filter_at(vars(contains("q")), any_vars(!is.na(.) & .!=0)) #remove if all quarters are missing
+  #site sum over last 3 pds
+    ci_index <- ci_index %>% 
+      gather(pd, val, starts_with("fy"), na.rm = TRUE) %>% 
+      select(-pd) %>% 
+      mutate(modality = ifelse(modality %in% c("Index", "IndexMod"), "ALL Index", modality)) %>% 
+      group_by_if(is.character) %>% 
+      summarise_if(is.numeric, ~ sum(., na.rm = TRUE)) %>% 
+      ungroup()
+  #index share
+    ci_index <- ci_index %>% 
+      group_by(operatingunit, psnu, sitename, orgunituid) %>% 
+      mutate(indexshare = round(val / sum(val), 2)) %>% 
+      ungroup() %>% 
+      filter(modality == "ALL Index") %>% 
+      select(-modality)
+  
+  #Calculate percentile grouping
+    ci_index <- ci_index %>%
+      group_by(operatingunit, psnu) %>% 
+      mutate(ci.hts_index.score = case_when(indexshare < quantile(indexshare, .25) ~ 2,
+                                            indexshare < quantile(indexshare, .50) ~ 1,
+                                            TRUE                                   ~ 0)) %>% 
+      ungroup() %>% 
+      rename(ci.hts_index.value = indexshare) %>% 
+      select(-val)
+    

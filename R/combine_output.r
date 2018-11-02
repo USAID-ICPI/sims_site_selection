@@ -33,6 +33,7 @@ sites <- df_site %>%
 combo <- 
   left_join(sites, ci_hts_pos) %>% 
   left_join(., ci_hts_pos_yoy) %>% 
+  left_join(., ci_index) %>% 
   left_join(., init_tx_new) %>% 
   left_join(., init_tx_new_yoy) %>% 
   left_join(., lnk_val) %>% 
@@ -41,7 +42,7 @@ combo <-
   left_join(., stat_ovc) %>% 
   left_join(., stat_oth)
 
-rm(sites, ci_hts_pos, ci_hts_pos_yoy, init_tx_new, init_tx_new_yoy, lnk_val, lnk_chng, prfm_ind, stat_oth, stat_ovc)
+rm(sites, ci_hts_pos, ci_hts_pos_yoy, ci_index, init_tx_new, init_tx_new_yoy, lnk_val, lnk_chng, prfm_ind, stat_oth, stat_ovc)
 
 combo <- combo %>% 
   filter_at(vars(matches("(ci|init|lnk|stat|prfm)")), any_vars(!is.na(.) & .!=0))
