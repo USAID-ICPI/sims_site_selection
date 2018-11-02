@@ -30,10 +30,20 @@ ou <- "Kenya"
 #pull site info
   sites <- df_site %>% 
     distinct(sitename, sitetype, operatingunit, psnu, snuprioritization, orgunituid)
-
+  
+  agency <- df_site %>% 
+    filter(fundingagency != "Dedup") %>% 
+    distinct(orgunituid, fundingagency) %>% 
+    mutate(n = "X",
+           fundingagency = str_remove(fundingagency, "(HHS/|/AF)") %>% 
+             paste0("agency_", .) %>% 
+             tolower()) %>% 
+    spread(fundingagency, n)
+  
 #join
   combo <- 
-    left_join(sites, ci_hts_pos) %>% 
+    left_join(sites, agency) %>% 
+    left_join(., ci_hts_pos) %>% 
     left_join(., ci_hts_pos_yoy) %>% 
     left_join(., ci_index) %>% 
     left_join(., init_tx_new) %>% 
@@ -45,16 +55,16 @@ ou <- "Kenya"
     left_join(., stat_ovc) %>% 
     left_join(., stat_oth)
   
-  rm(sites, ci_hts_pos, ci_hts_pos_yoy, ci_index, init_tx_new, init_tx_new_yoy, init_tx_netnew_yoy, lnk_val, lnk_chng, prfm_ind, stat_oth, stat_ovc)
+  rm(sites, agency, ci_hts_pos, ci_hts_pos_yoy, ci_index, init_tx_new, init_tx_new_yoy, init_tx_netnew_yoy, lnk_val, lnk_chng, prfm_ind, stat_oth, stat_ovc)
 
 #remove blank rows & arrange by TX_NEW volumne
   combo <- combo %>% 
-    filter_at(vars(matches("(ci|init|lnk|stat|prfm)")), any_vars(!is.na(.) & .!=0)) %>% 
+    filter_at(vars(matches("^(ci|init|lnk|stat|prfm)")), any_vars(!is.na(.) & .!=0)) %>% 
     arrange(desc(init.tx_new_ou.value))
 
 #covert to wide
   combo_w <- combo %>% 
-    gather(metric, val, -c(sitename, operatingunit, psnu, snuprioritization, sitetype, orgunituid), na.rm = TRUE) %>% 
+    gather(metric, val, matches("^(ci|init|lnk|stat|prfm)"), na.rm = TRUE) %>% 
     separate(metric, c("grp", "metric", "type"), sep = "\\.") %>% 
     unite(metric, grp, metric, sep = ".") %>% 
     spread(metric, val)
