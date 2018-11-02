@@ -81,3 +81,37 @@
              init.tx_new_yoy.value = val) %>% 
       select(-pd, -init.tx_new_yoy.value)
      
+#4. NET NEW change
+    
+    init_tx_netnew_yoy <- df_site %>% 
+      filter(indicator == "TX_NET_NEW", 
+             standardizeddisaggregate == "Total Numerator",
+             typemilitary == "N") %>% 
+      select(operatingunit, psnu,sitename, orgunituid, pds) 
+    
+    init_tx_netnew_yoy <- init_tx_netnew_yoy %>% 
+      gather(pd, val, starts_with("fy"), na.rm = TRUE) %>% 
+      mutate(pd = str_remove_all(pd, "q[:digit:]")) %>% 
+      group_by_if(is.character) %>% 
+      summarise_if(is.numeric, ~ sum(., na.rm = TRUE)) %>% 
+      #ungroup() %>% 
+      #group_by_if(is.character) %>% 
+      mutate(init.tx_netnew_yoyd =  val - dplyr::lag(val),
+             init.tx_netnew_yoyc = (val - dplyr::lag(val))/dplyr::lag(val)) %>% 
+      ungroup() %>% 
+      filter(pd == "fy2018", is.finite(init.tx_netnew_yoyc))
+    
+    #Calculate percentile grouping
+    init_tx_netnew_yoy <- init_tx_netnew_yoy %>%
+      group_by(operatingunit) %>% 
+      mutate(init.tx_new_yoyd.score = case_when(init.tx_netnew_yoyd > quantile(init.tx_netnew_yoyd, .75) ~ 2,
+                                                init.tx_netnew_yoyd > quantile(init.tx_netnew_yoyd, .50) ~ 1,
+                                                TRUE                                ~ 0),
+             init.tx_new_yoyc.score = case_when(init.tx_netnew_yoyc > quantile(init.tx_netnew_yoyc, .75) ~ 2,
+                                                init.tx_netnew_yoyc > quantile(init.tx_netnew_yoyc, .50) ~ 1,
+                                                TRUE                                ~ 0)) %>% 
+      ungroup() %>% 
+      rename(init.tx_netnew_yoyd.value = init.tx_netnew_yoyd,
+             init.tx_netnew_yoyc.value = init.tx_netnew_yoyc,
+             init.tx_netnew_yoy.value = val) %>% 
+      select(-pd, -init.tx_netnew_yoy.value)
