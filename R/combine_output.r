@@ -22,6 +22,7 @@ ou <- "Kenya"
   source("R/init_indicators.r")
   source("R/lnk_indicators.r")
   source("R/prfm_indicators.r")
+  source("R/stat_indicators.r")
 
 
 # COMBINE -----------------------------------------------------------------
@@ -29,19 +30,21 @@ ou <- "Kenya"
 sites <- df_site %>% 
   distinct(sitename, sitetype, operatingunit, psnu, snuprioritization)
 
-combo <- left_join(sites, ci_hts_pos)
-combo <- left_join(combo, ci_hts_pos_yoy)
-combo <- left_join(combo, init_tx_new)
-combo <- left_join(combo, init_tx_new_yoy)
-combo <- left_join(combo, lnk_val)
-combo <- left_join(combo, lnk_chng)
-combo <- left_join(combo, prfm_ind)
-combo <- left_join(combo, prfm_ovc)
+combo <- 
+  left_join(sites, ci_hts_pos) %>% 
+  left_join(., ci_hts_pos_yoy) %>% 
+  left_join(., init_tx_new) %>% 
+  left_join(., init_tx_new_yoy) %>% 
+  left_join(., lnk_val) %>% 
+  left_join(., lnk_chng) %>% 
+  left_join(., prfm_ind) %>% 
+  left_join(., stat_ovc) %>% 
+  left_join(., stat_oth)
 
-rm(sites, ci_hts_pos, ci_hts_pos_yoy, init_tx_new, init_tx_new_yoy, lnk_val, lnk_chng, prfm_ind, prfm_ovc)
+rm(sites, ci_hts_pos, ci_hts_pos_yoy, init_tx_new, init_tx_new_yoy, lnk_val, lnk_chng, prfm_ind, stat_oth, stat_ovc)
 
 combo <- combo %>% 
-  filter_at(vars(starts_with("ci"), starts_with("init"), starts_with("lnk"), starts_with("prfm")), any_vars(!is.na(.) & .!=0))
+  filter_at(vars(matches("(ci|init|lnk|stat|prfm)")), any_vars(!is.na(.) & .!=0))
 
 combo <- combo %>% 
   arrange(desc(init.tx_new_psnu.value))
