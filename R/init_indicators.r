@@ -104,10 +104,10 @@
     #Calculate percentile grouping
     init_tx_netnew_yoy <- init_tx_netnew_yoy %>%
       group_by(operatingunit) %>% 
-      mutate(init.tx_new_yoyd.score = case_when(init.tx_netnew_yoyd > quantile(init.tx_netnew_yoyd, .75) ~ 2,
+      mutate(init.tx_netnew_yoyd.score = case_when(init.tx_netnew_yoyd > quantile(init.tx_netnew_yoyd, .75) ~ 2,
                                                 init.tx_netnew_yoyd > quantile(init.tx_netnew_yoyd, .50) ~ 1,
                                                 TRUE                                ~ 0),
-             init.tx_new_yoyc.score = case_when(init.tx_netnew_yoyc > quantile(init.tx_netnew_yoyc, .75) ~ 2,
+             init.tx_netnew_yoyc.score = case_when(init.tx_netnew_yoyc > quantile(init.tx_netnew_yoyc, .75) ~ 2,
                                                 init.tx_netnew_yoyc > quantile(init.tx_netnew_yoyc, .50) ~ 1,
                                                 TRUE                                ~ 0)) %>% 
       ungroup() %>% 
@@ -115,3 +115,6 @@
              init.tx_netnew_yoyc.value = init.tx_netnew_yoyc,
              init.tx_netnew_yoy.value = val) %>% 
       select(-pd, -init.tx_netnew_yoy.value)
+    
+  rm(headers, pds, qtr, qtr_fltr)
+  

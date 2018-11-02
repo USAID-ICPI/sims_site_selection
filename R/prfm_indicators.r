@@ -28,3 +28,5 @@ prfm_ind <- prfm_ind %>%
   gather(type, val, value, score, na.rm = TRUE) %>% 
   unite(ind, indicator, type, sep = ".") %>% 
   spread(ind, val) 
+
+rm(thres_med)

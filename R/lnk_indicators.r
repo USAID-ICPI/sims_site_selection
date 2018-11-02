@@ -81,3 +81,6 @@
       rename(lnk.lnk_pos_chng.value = link_qtrdiff_pos,
              lnk.lnk_neg_chng.value = link_qtrdiff_neg) %>% 
       select(-linkage)
+    
+    rm(headers, pds)
+    

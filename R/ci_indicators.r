@@ -117,3 +117,5 @@
       rename(ci.hts_index.value = indexshare) %>% 
       select(-val)
     
+  rm(headers, pds, qtr, qtr_fltr)
+    
