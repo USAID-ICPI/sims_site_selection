@@ -9,13 +9,15 @@ ou <- "Kenya"
 
 # IMPORT DATASET ----------------------------------------------------------
 
-#strucutre filepath from inputs
+#structure filepath from inputs
   filepath <- file.path(path, paste0("MER_Structured_Dataset_SITE_IM_FY17-18_20180921_v2_2_", ou, ".rds"))
 #open file
   df_site <- read_rds(filepath)
   rm(path, ou, filepath)
 
-
+#keep only USAID and CDC
+  df_site <- filter(df_site, fundingagency %in% c("USAID", "HHS/CDC"))
+  
 # CREATE SCORES -----------------------------------------------------------
 
   source("R/ci_indicators.r")
