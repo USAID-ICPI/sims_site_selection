@@ -32,15 +32,23 @@ ou <- "Kenya"
 #pull site info
   sites <- df_site %>% 
     distinct(sitename, sitetype, operatingunit, psnu, snuprioritization, orgunituid)
+
+#create placeholder df to ensure both agencies are all OUs datasets (for reshape)
+  df_plc <- tribble(  ~orgunituid, ~fundingagency,
+                    "PLACEHOLDER",        "USAID",
+                    "PLACEHOLDER",      "HHS/CDC")
   
-  agency <- df_site %>% 
-    filter(fundingagency != "Dedup") %>% 
-    distinct(orgunituid, fundingagency) %>% 
+#sites with agency affiliations
+  agency <- df_site %>%
+    bind_rows(df_plc) %>% 
+    distinct(orgunituid, fundingagency) %>%
+    filter(orgunituid == "PLACEHOLDER") %>% 
     mutate(n = "X",
            fundingagency = str_remove(fundingagency, "(HHS/|/AF)") %>% 
              paste0("agency_", .) %>% 
              tolower()) %>% 
-    spread(fundingagency, n)
+    spread(fundingagency, n) %>% 
+    filter(orgunituid != "PLACEHOLDER")
   
 #join
   combo <- 
@@ -57,7 +65,7 @@ ou <- "Kenya"
     left_join(., stat_ovc) %>% 
     left_join(., stat_oth)
   
-  rm(sites, agency, ci_hts_pos, ci_hts_pos_yoy, ci_index, init_tx_new, init_tx_new_yoy, init_tx_netnew_yoy, lnk_val, lnk_chng, prfm_ind, stat_oth, stat_ovc)
+  rm(sites, df_plc, agency, ci_hts_pos, ci_hts_pos_yoy, ci_index, init_tx_new, init_tx_new_yoy, init_tx_netnew_yoy, lnk_val, lnk_chng, prfm_ind, stat_oth, stat_ovc)
 
 #remove blank rows & arrange by TX_NEW volumne
   combo <- combo %>% 
