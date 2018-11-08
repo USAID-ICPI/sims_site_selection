@@ -1,12 +1,15 @@
 Package: sims_site_selection
-Title: What the Package Does (One Line, Title Case)
+Title: SIMS Site Prioritization Scoring
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Aaron",
+           family = "Chafetz",
            role = c("aut", "cre"),
-           email = "first.last@example.com")
-Description: What the package does (one paragraph).
-License: What license it uses
+           email = "achafetz@usaid.gov")
+Description: Using the PEPFAR MER Structured dataset, score sites on a set of criteria
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+Remotes: 
+    ICPI/ICPIutilities
+RoxygenNote: 6.1.0
