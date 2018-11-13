@@ -1,4 +1,4 @@
-Package: sims_site_selection
+Package: asSIMSble
 Title: SIMS Site Prioritization Scoring
 Version: 0.0.0.9000
 Authors@R: 
@@ -10,6 +10,15 @@ Description: Using the PEPFAR MER Structured dataset, score sites on a set of cr
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 6.1.0
 Remotes: 
     ICPI/ICPIutilities
-RoxygenNote: 6.1.0
+Imports: 
+    dplyr,
+    magrittr,
+    purrr,
+    stringr,
+    tibble,
+    tidyr,
+    tools,
+    openxlsx
