@@ -11,8 +11,13 @@
 
 assemble <- function(filepath, template_filepath = NULL, output_folderpath = NULL){
 
+  cat("\n\nread in data ... ")
+
   #import
     df_import <- importsite(filepath)
+
+  ou <- df_import %>% dplyr::distinct(operatingunit) %>% dplyr::pull()
+  cat(ou, " ... score sites ...")
 
   #subset to relevant agencies and indicators
     df_site <- limit(df_import)
@@ -32,7 +37,7 @@ assemble <- function(filepath, template_filepath = NULL, output_folderpath = NUL
       purrr::reduce(dplyr::full_join, by = c("operatingunit", "psnu", "sitename", "orgunituid"))
 
   #remove blank rows & arrange by TX_NEW volumne
-    df_export <- df_export %>%
+    df_export <- df_combo %>%
       dplyr::filter_at(dplyr::vars(dplyr::matches("^(ci|init|lnk|stat|prfm)")),
                        dplyr::any_vars(!is.na(.) & .!=0)) %>%
       dplyr::arrange(desc(init.tx_new_ou.value))
@@ -57,5 +62,6 @@ assemble <- function(filepath, template_filepath = NULL, output_folderpath = NUL
       fill_template(df_export, template_filepath, output_folderpath)
     }
 
+    cat(" ... complete")
 
 }
