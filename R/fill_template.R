@@ -31,15 +31,21 @@ fill_template <- function(df, template_filepath, output_folderpath){
                         startCol = 7, startRow = 2, colNames = FALSE)
 
   #paste data
-    openxlsx::writeData(wb, sheet = "rawdata", x = combo_w,
+    openxlsx::writeData(wb, sheet = "rawdata", x = df,
                         startCol = 1, startRow = 3, colNames = FALSE)
+
+  #note date updated
+    # when <- paste("Updated:", Sys.Date())
+    # openxlsx::write.xlsx(wb, sheet = "Guidance", x = when,
+    #                      startCol = 2, startRow = 73, colNames = FALSE)
+
 
   #hide rs and rawdata tab
     openxlsx::sheetVisibility(wb)[5] <- "hidden"
     openxlsx::sheetVisibility(wb)[6] <- "hidden"
 
   #save workbook
-    name <- file.path(output_folderpath, paste0(opunit, "_SIMS_prioritization_",
+    name <- file.path(output_folderpath, paste0(opunit, "_SIMS_Prioritization_",
                                        stringr::str_remove_all(Sys.Date(), "-"), ".xlsx"))
 
     openxlsx::saveWorkbook(wb, name, overwrite = TRUE)
