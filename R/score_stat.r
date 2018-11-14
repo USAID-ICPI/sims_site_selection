@@ -10,7 +10,7 @@
 score_stat <- function(df){
 
   #1. OVC Known Status
-    stat_ovc <- df_site %>%
+    stat_ovc <- df %>%
       dplyr::filter(indicator %in% c("OVC_HIVSTAT", "OVC_SERV"),
              (standardizeddisaggregate == "Total Numerator" |
                 (standardizeddisaggregate == "ReportedStatus" & otherdisaggregate ==  "No HIV Status"))) %>%
@@ -35,7 +35,7 @@ score_stat <- function(df){
       dplyr::select(-ovc_serv)
 
   #2. & 3. PMTCT & TB Known Status
-    stat_oth <- df_site %>%
+    stat_oth <- df %>%
       dplyr::filter(indicator %in% c("PMTCT_STAT", "TB_STAT"),
                     stringr::str_detect(standardizeddisaggregate, "Total")) %>%
       ICPIutilities::add_cumulative() %>%

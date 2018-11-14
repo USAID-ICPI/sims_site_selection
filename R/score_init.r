@@ -13,11 +13,11 @@ score_init <- function(df){
   #1.&2. TX_NEW Position relative to OU-/PSNU-level median (median last three quarters)
 
   #pull headers to figure out last three quarters to keep
-    headers <- names(df_site)
+    headers <- names(df)
     pds <- headers[stringr::str_detect(headers, "q(?=[:digit:])")] %>%
       tail(., n =3)
   #narrow down to data needed for indicator creation
-    init_tx_new <- df_site %>%
+    init_tx_new <- df %>%
       dplyr::filter(indicator == "TX_NEW",
                     standardizeddisaggregate == "Total Numerator",
                     typemilitary == "N") %>%
@@ -47,7 +47,7 @@ score_init <- function(df){
 
   #3. Year on Year change in volume
 
-    qtr <- ICPIutilities::identifypd(df_site, "quarter")
+    qtr <- ICPIutilities::identifypd(df, "quarter")
 
     qtr_fltr <- dplyr::case_when(qtr == 1 ~ "1",
                                  qtr == 2 ~ "(1|2)",
@@ -56,7 +56,7 @@ score_init <- function(df){
 
     pds <- headers[stringr::str_detect(headers, paste0("q", qtr_fltr))]
 
-    init_tx_new_yoy <- df_site %>%
+    init_tx_new_yoy <- df %>%
       dplyr::filter(indicator == "TX_NEW",
                     standardizeddisaggregate == "Total Numerator",
                     typemilitary == "N") %>%
@@ -91,7 +91,7 @@ score_init <- function(df){
 
   #4. NET NEW change
 
-    init_tx_netnew_yoy <- df_site %>%
+    init_tx_netnew_yoy <- df %>%
       dplyr::filter(indicator == "TX_NET_NEW",
                     standardizeddisaggregate == "Total Numerator",
                     typemilitary == "N") %>%

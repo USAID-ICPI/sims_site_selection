@@ -12,12 +12,12 @@ score_ci <- function(df){
   #1.&2. HTS_TST_POS Position relative to OU-/PSNU-level median (median last three quarters)
 
   #pull headers to figure out last three quarters to keep
-    headers <- names(df_site)
+    headers <- names(df)
     pds <- headers[stringr::str_detect(headers, "q(?=[:digit:])")] %>%
       tail(., n =3)
 
   #narrow down to data needed for indicator creation
-    ci_hts_pos <- df_site %>%
+    ci_hts_pos <- df %>%
       dplyr::filter(indicator == "HTS_TST_POS",
              standardizeddisaggregate == "Total Numerator",
              typemilitary == "N") %>%
@@ -50,7 +50,7 @@ score_ci <- function(df){
   #3. Year on Year change in volume
 
   #figure out quarter to cal cumulative in prior year
-    qtr <- ICPIutilities::identifypd(df_site, "quarter")
+    qtr <- ICPIutilities::identifypd(df, "quarter")
     qtr_fltr <- dplyr::case_when(qtr == 1 ~ "1",
                           qtr == 2 ~ "(1|2)",
                           qtr == 3 ~ "(1|2|3)",
@@ -58,7 +58,7 @@ score_ci <- function(df){
     pds <- headers[stringr::str_detect(headers, paste0("q", qtr_fltr))]
 
   #filter to key cols and variables
-    ci_hts_pos_yoy <- df_site %>%
+    ci_hts_pos_yoy <- df %>%
       dplyr::filter(indicator == "HTS_TST_POS",
                     standardizeddisaggregate == "Total Numerator",
                     typemilitary == "N") %>%
@@ -95,7 +95,7 @@ score_ci <- function(df){
   #4. Share Index testing
 
   #narrow down to data needed for indicator creation
-    ci_index <- df_site %>%
+    ci_index <- df %>%
       dplyr::filter(indicator == "HTS_TST",
                     standardizeddisaggregate %in% c("Modality/Age Aggregated/Sex/Result",
                                                     "Modality/Age/Sex/Result"),

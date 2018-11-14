@@ -11,12 +11,12 @@ score_lnk <- function(df){
   #1. Proxy Linkage
 
   #pull headers to figure out last three quarters to keep
-    headers <- names(df_site)
+    headers <- names(df)
     pds <- headers[stringr::str_detect(headers, "q(?=[:digit:])")] %>%
       tail(., n =3)
 
   #narrow down to data needed for indicator creation
-    lnk_val <- df_site %>%
+    lnk_val <- df %>%
       dplyr::filter(indicator %in% c("HTS_TST_POS", "TX_NEW"),
                     standardizeddisaggregate == "Total Numerator",
                     typemilitary == "N") %>%
@@ -48,7 +48,7 @@ score_lnk <- function(df){
 
   #4. & 5. Number of quarters without decrease/increase
   #narrow down to data needed for indicator creation
-    lnk_chng <- df_site %>%
+    lnk_chng <- df %>%
       dplyr::filter(indicator %in% c("HTS_TST_POS", "TX_NEW"),
                     standardizeddisaggregate == "Total Numerator",
                     typemilitary == "N") %>%

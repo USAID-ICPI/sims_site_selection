@@ -9,7 +9,7 @@
 
 score_prfm <- function(df){
 
-  prfm_ind <- df_site %>%
+  prfm_ind <- df %>%
     dplyr::filter(indicator %in% c("HTS_TST_POS", "TX_NEW", "PMTCT_STAT", "OVC_SERV", "KP_PREV", "VMMC_CIRC"),
                   standardizeddisaggregate == "Total Numerator",
                   typemilitary == "N") %>%
@@ -22,7 +22,7 @@ score_prfm <- function(df){
     dplyr::select(-fy2018cum) %>%
     dplyr::mutate(indicator = paste0("prfm.", stringr::str_to_lower(indicator)))
 
-  thres_med <- addthresholds(df_site) %>% .["med"]
+  thres_med <- addthresholds(df) %>% .["med"]
 
   prfm_ind <- prfm_ind %>%
     dplyr::group_by(indicator) %>%

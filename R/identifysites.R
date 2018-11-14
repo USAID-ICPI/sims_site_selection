@@ -15,7 +15,7 @@ identifysites <- function(df){
                                 "PLACEHOLDER",      "HHS/CDC")
 
   #site info with agency affiliations
-    sites <- df_site %>%
+    sites <- df %>%
       dplyr::filter(fundingagency %in% c("HHS/CDC", "USAID")) %>%
       dplyr::bind_rows(df_plc) %>% #add in placeholders to ensure both USAID + CDC are present in all
       dplyr::distinct(sitename, sitetype, operatingunit, psnu, snuprioritization, orgunituid, fundingagency) %>%
