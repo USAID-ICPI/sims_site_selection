@@ -21,7 +21,7 @@ align_output <- function(df){
       "init.tx_netnew_yoyd", "init.tx_new_ou", "init.tx_new_psnu",
       "init.tx_new_yoyc", "init.tx_new_yoyd",
       #linkage
-      "lnk.lnk_neg_chng", "lnk.lnk_pos_chng", "lnk.proxylinkage",
+      # "lnk.lnk_neg_chng", "lnk.lnk_pos_chng", "lnk.proxylinkage",
       #performance
       "prfm.hts_tst_pos", "prfm.kp_prev", "prfm.ovc_serv", "prfm.pmtct_stat",
       "prfm.tx_new", "prfm.vmmc_circ",

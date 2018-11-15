@@ -28,12 +28,13 @@ assemble <- function(filepath, template_filepath = NULL, output_folderpath = NUL
   #create scores
     df_ci <- score_ci(df_site)
     df_init <- score_init(df_site)
-    df_lnk <- score_lnk(df_site)
+    # df_lnk <- score_lnk(df_site)
     df_prfm <- score_prfm(df_site)
     df_stat <- score_stat(df_site)
 
   #combine all together
-    df_combo <- list(df_meta, df_ci, df_init, df_lnk, df_prfm, df_stat) %>%
+    df_combo <- list(df_meta, df_ci, df_init, #df_lnk,
+                     df_prfm, df_stat) %>%
       purrr::reduce(dplyr::full_join, by = c("operatingunit", "psnu", "sitename", "orgunituid"))
 
   #remove blank rows & arrange by TX_NEW volumne
