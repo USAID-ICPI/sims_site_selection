@@ -10,6 +10,7 @@
 score_stat <- function(df){
 
   #1. OVC Known Status
+  if(all((c("OVC_HIVSTAT", "OVC_SERV") %in% unique(df$indicator))) == TRUE){
     stat_ovc <- df %>%
       dplyr::filter(indicator %in% c("OVC_HIVSTAT", "OVC_SERV"),
              (standardizeddisaggregate == "Total Numerator" |
@@ -33,7 +34,9 @@ score_stat <- function(df){
                                        TRUE                                                ~ 0)) %>%
       dplyr::rename(stat.ovc.value = knownstatus) %>%
       dplyr::select(-ovc_serv)
+  }
 
+  if(any((c("PMTCT_STAT", "TB_STAT") %in% unique(df$indicator))) == TRUE){
   #2. & 3. PMTCT & TB Known Status
     stat_oth <- df %>%
       dplyr::filter(indicator %in% c("PMTCT_STAT", "TB_STAT"),
@@ -59,8 +62,25 @@ score_stat <- function(df){
       tidyr::gather(type, val, value, score) %>%
       tidyr::unite(ind, indicator, type, sep = ".") %>%
       tidyr::spread(ind, val)
+  }
 
   #join together
+  if(all(exists(c("stat_ovc", "stat_oth")))){
     stat <- dplyr::full_join(stat_ovc, stat_oth, by = c("operatingunit", "psnu", "sitename", "orgunituid"))
+  }
+
+
+  #return
+  if(exists("stat")) {
     return(stat)
+  } else if(exists("stat_ovc")) {
+    stat <- stat_ovc
+    return(stat)
+  } else if(exists("stat_oth")) {
+    stat <- stat_oth
+    return(stat)
+  } else {
+    print("no stat variables")
+  }
+
 }
