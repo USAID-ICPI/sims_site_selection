@@ -15,6 +15,11 @@ limit <- function(df){
       dplyr::filter(typemilitary == "N",
                     sitetype != "NULL")
 
+  #remove blank rows
+    df_lim %>%
+      dplyr::select(-fy2019_targets) %>%
+      dplyr::filter_at(dplyr::vars(dplyr::matches("q|targets")), dplyr::any_vars(!is.na(.) & .!=0)) #remove if all quarters are missing
+
   #key indicators & disaggs
     df_ind <- tibble::tribble(
             ~indicator,            ~standardizeddisaggregate,
