@@ -60,12 +60,12 @@ assemble <- function(filepath, template_filepath = NULL, output_folderpath = NUL
         dplyr::filter(type == "score")
 
       #flag warning if more than 5000 rows (table make in template)
-      if(nrow(df_export) > 5000)  cat(" ... WARNING!!! WARNING!!! >5K ROWS")
+      if(nrow(df_export) > 5000)  cat("WARNING!!! WARNING!!! >5K ROWS ... ")
 
       #export to template
       fill_template(df_export, template_filepath, output_folderpath)
     }
 
-    cat(" ... complete")
+    cat("complete")
 
 }
