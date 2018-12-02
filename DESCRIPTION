@@ -1,6 +1,6 @@
 Package: asSIMSble
 Title: SIMS Site Prioritization Scoring
-Version: 1.0.3
+Version: 1.0.4
 Authors@R: 
     person(given = "Aaron",
            family = "Chafetz",
