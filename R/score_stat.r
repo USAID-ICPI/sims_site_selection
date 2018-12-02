@@ -36,7 +36,13 @@ score_stat <- function(df){
       dplyr::select(-ovc_serv)
   }
 
-  if(any((c("PMTCT_STAT", "TB_STAT") %in% unique(df$indicator))) == TRUE){
+  valcheck <- df %>%
+    dplyr::filter(indicator %in% c("PMTCT_STAT", "TB_STAT"),
+                  stringr::str_detect(standardizeddisaggregate, "Total")) %>%
+    ICPIutilities::add_cumulative() %>%
+    dplyr::summarise_at(dplyr::vars(fy2018cum), sum, na.rm = TRUE)
+
+  if(valcheck != 0 && any((c("PMTCT_STAT", "TB_STAT") %in% unique(df$indicator))) == TRUE){
   #2. & 3. PMTCT & TB Known Status
     stat_oth <- df %>%
       dplyr::filter(indicator %in% c("PMTCT_STAT", "TB_STAT"),
@@ -80,7 +86,11 @@ score_stat <- function(df){
     stat <- stat_oth
     return(stat)
   } else {
-    print("no stat variables")
+    stat <- tibble::tibble(operatingunit = as.character(NA),
+                           psnu = as.character(NA),
+                           sitename = as.character(NA),
+                           orgunituid = as.character(NA))
+    return(stat)
   }
 
 }
